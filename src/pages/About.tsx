@@ -3,7 +3,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { Book, CheckCircle, Award, Calendar, Users, GraduationCap } from "lucide-react";
+import { Book, CheckCircle, Award, Calendar, Users, GraduationCap, Mail } from "lucide-react";
 
 const About = () => {
   return (
@@ -49,7 +49,7 @@ const About = () => {
                   </div>
                   <div className="flex items-start">
                     <CheckCircle className="h-5 w-5 text-gurukul-purple mr-2 mt-1" />
-                    <p className="text-gray-700">Create comprehensive, topic-wise resources for grades 1-10</p>
+                    <p className="text-gray-700">Create comprehensive, topic-wise resources for grades 1-12</p>
                   </div>
                   <div className="flex items-start">
                     <CheckCircle className="h-5 w-5 text-gurukul-purple mr-2 mt-1" />
@@ -99,13 +99,13 @@ const About = () => {
                     </div>
                   </div>
                   <div>
-                    <h3 className="text-2xl font-bold mb-1">Mathematics Expert</h3>
+                    <h3 className="text-2xl font-bold mb-1">Brajesh Kumar</h3>
                     <p className="text-gray-600 mb-2">5+ years of experience in mathematics education</p>
-                    <div className="flex items-center">
+                    <div className="flex flex-wrap gap-2">
                       <span className="bg-gurukul-green/20 text-gurukul-green text-sm py-1 px-2 rounded-full">
                         Chegg Expert
                       </span>
-                      <span className="bg-gurukul-purple/20 text-gurukul-purple text-sm py-1 px-2 rounded-full ml-2">
+                      <span className="bg-gurukul-purple/20 text-gurukul-purple text-sm py-1 px-2 rounded-full">
                         Course Hero Educator
                       </span>
                     </div>
@@ -116,18 +116,18 @@ const About = () => {
                   <h4 className="text-xl font-semibold mb-4">Experience & Expertise</h4>
                   <p className="text-gray-700 mb-4">
                     With over 5 years of experience on leading educational platforms like Chegg and Course Hero, 
-                    our teacher has helped thousands of students master mathematical concepts and improve their grades.
+                    Brajesh Kumar has helped thousands of students master mathematical concepts and improve their grades.
                   </p>
                   <p className="text-gray-700 mb-6">
                     Specializing in breaking down complex topics into understandable components,
-                    our teaching approach focuses on building strong foundations and developing
+                    his teaching approach focuses on building strong foundations and developing
                     critical thinking skills that help students succeed in mathematics and beyond.
                   </p>
                   
                   <h4 className="text-xl font-semibold mb-4">Teaching Philosophy</h4>
                   <p className="text-gray-700 mb-4">
-                    We believe that every student can excel in mathematics with the right guidance and resources.
-                    Our teaching philosophy centers on:
+                    Brajesh believes that every student can excel in mathematics with the right guidance and resources.
+                    His teaching philosophy centers on:
                   </p>
                   <ul className="space-y-2 mb-6">
                     <li className="flex items-start">

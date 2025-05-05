@@ -40,9 +40,9 @@ const TopicGrid = () => {
       textColor: "text-rose-600",
     },
     {
-      name: "Word Problems",
-      icon: "✍️",
-      description: "Practical problem solving through critical thinking",
+      name: "Calculus",
+      icon: "∫",
+      description: "Limits, derivatives, integrals, and applications",
       color: "bg-teal-50",
       textColor: "text-teal-600",
     },

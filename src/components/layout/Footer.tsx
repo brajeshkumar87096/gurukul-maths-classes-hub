@@ -1,5 +1,6 @@
 
 import { Link } from "react-router-dom";
+import { Mail } from "lucide-react";
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -20,7 +21,7 @@ const Footer = () => {
               </span>
             </div>
             <p className="text-gray-600 mb-4">
-              Providing quality mathematics education through online classes for grades 1-10.
+              Providing quality mathematics education through online classes for grades 1-12.
             </p>
             <p className="text-gray-600">
               <span className="font-medium">Since 2025</span>
@@ -57,14 +58,18 @@ const Footer = () => {
             <h3 className="text-lg font-semibold mb-4 text-gray-800">Contact Us</h3>
             <div className="space-y-2 text-gray-600">
               <p>
+                <span className="font-medium">Instructor:</span> Brajesh Kumar
+              </p>
+              <p>
                 <span className="font-medium">WhatsApp:</span> 8709601984
               </p>
               <p>
                 <span className="font-medium">Phone:</span> 9523085735
               </p>
-              <p>
-                <a href="https://wa.me/8709601984" className="text-gurukul-purple hover:underline">
-                  Send a message
+              <p className="flex items-center">
+                <span className="font-medium mr-1">Email:</span>
+                <a href="mailto:brajeshkumar87096@gmail.com" className="text-gurukul-purple hover:underline">
+                  brajeshkumar87096@gmail.com
                 </a>
               </p>
             </div>

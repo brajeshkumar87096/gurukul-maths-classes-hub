@@ -104,7 +104,7 @@ const ContactForm = () => {
             required
           >
             <option value="">Select Grade</option>
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((grade) => (
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((grade) => (
               <option key={grade} value={`Grade ${grade}`}>
                 Grade {grade}
               </option>
@@ -144,6 +144,10 @@ const ContactForm = () => {
           <a href="https://wa.me/8709601984" className="flex items-center text-gray-700 hover:text-gurukul-purple">
             <MessageCircle className="h-5 w-5 mr-2" />
             <span>WhatsApp: 8709601984</span>
+          </a>
+          <a href="mailto:brajeshkumar87096@gmail.com" className="flex items-center text-gray-700 hover:text-gurukul-purple">
+            <Mail className="h-5 w-5 mr-2" />
+            <span>brajeshkumar87096@gmail.com</span>
           </a>
         </div>
       </div>

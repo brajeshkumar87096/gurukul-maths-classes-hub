@@ -66,6 +66,16 @@ const Topics = () => {
           { name: "Functions", pdfs: ["Function Notation.pdf", "Graphing Functions.pdf"] },
           { name: "Exponents and Logarithms", pdfs: ["Exponent Rules.pdf", "Logarithm Basics.pdf"] },
         ]
+      },
+      {
+        grade: "Grade 11-12",
+        topics: [
+          { name: "Advanced Algebra", pdfs: ["Polynomial Functions.pdf", "Complex Numbers.pdf", "Sequences and Series.pdf"] },
+          { name: "Calculus", pdfs: ["Limits and Continuity.pdf", "Differentiation.pdf", "Integration.pdf"] },
+          { name: "Trigonometry", pdfs: ["Advanced Trigonometric Functions.pdf", "Trigonometric Identities.pdf"] },
+          { name: "Probability and Statistics", pdfs: ["Probability Distributions.pdf", "Hypothesis Testing.pdf"] },
+          { name: "Vectors and Matrices", pdfs: ["Vector Operations.pdf", "Matrix Algebra.pdf", "Linear Transformations.pdf"] },
+        ]
       }
     ]
   };
@@ -119,7 +129,7 @@ const Topics = () => {
               <TabsList className="grid w-full grid-cols-3 mb-8">
                 <TabsTrigger value="primary">Primary (Grades 1-4)</TabsTrigger>
                 <TabsTrigger value="middle">Middle (Grades 5-8)</TabsTrigger>
-                <TabsTrigger value="high">High (Grades 9-10)</TabsTrigger>
+                <TabsTrigger value="high">High (Grades 9-12)</TabsTrigger>
               </TabsList>
               
               {Object.entries(gradeTopics).map(([key, gradeGroup]) => (

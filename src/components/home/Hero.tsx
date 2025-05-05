@@ -14,7 +14,7 @@ const Hero = () => {
               <span className="text-gurukul-gold">Maths Classes</span>
             </h1>
             <p className="text-lg text-gray-700 mb-8">
-              Free online mathematics education for grades 1-10. Topic-wise lessons with 
+              Free online mathematics education for grades 1-12. Topic-wise lessons with 
               comprehensive PDFs to enhance learning and build strong mathematical foundations.
             </p>
             <div className="flex flex-wrap gap-4">

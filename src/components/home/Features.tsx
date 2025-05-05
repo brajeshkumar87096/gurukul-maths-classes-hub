@@ -5,8 +5,8 @@ const Features = () => {
   const features = [
     {
       icon: <GraduationCap className="h-10 w-10 text-gurukul-purple" />,
-      title: "Grades 1-10",
-      description: "Comprehensive mathematics curriculum tailored for students from grades 1 to 10.",
+      title: "Grades 1-12",
+      description: "Comprehensive mathematics curriculum tailored for students from grades 1 to 12.",
     },
     {
       icon: <FileText className="h-10 w-10 text-gurukul-purple" />,
@@ -21,7 +21,7 @@ const Features = () => {
     {
       icon: <Users className="h-10 w-10 text-gurukul-purple" />,
       title: "Experienced Teacher",
-      description: "Learn from a teacher with 5+ years of experience on Chegg and Course Hero.",
+      description: "Learn from Brajesh Kumar with 5+ years of experience on Chegg and Course Hero.",
     },
   ];
 

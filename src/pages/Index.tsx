@@ -27,7 +27,7 @@ const Index = () => {
                 <h2 className="text-3xl font-bold mb-4">Meet Your Teacher</h2>
                 <p className="text-lg text-gray-700 mb-6">
                   With over 5 years of experience on Chegg and Course Hero mathematics platforms, 
-                  our teacher brings expertise and passion to every lesson.
+                  our teacher Brajesh Kumar brings expertise and passion to every lesson.
                 </p>
                 <p className="text-gray-700 mb-6">
                   Specializing in breaking down complex concepts into understandable pieces, 
@@ -44,7 +44,7 @@ const Index = () => {
                       <div className="inline-block p-2 rounded-full bg-gurukul-purple/10 mb-4">
                         <GraduationCapIcon className="h-16 w-16 text-gurukul-purple" />
                       </div>
-                      <h3 className="text-xl font-bold">Mathematics Expert</h3>
+                      <h3 className="text-xl font-bold">Brajesh Kumar</h3>
                       <p className="text-gray-500">5+ Years Experience</p>
                     </div>
                     <ul className="space-y-2">
@@ -79,7 +79,7 @@ const Index = () => {
               <h2 className="text-3xl font-bold mb-4">Get in Touch</h2>
               <p className="text-lg text-gray-700 max-w-2xl mx-auto">
                 Have questions about our classes? Need help with a specific math topic?
-                Reach out and let us know how we can assist you!
+                Reach out to Brajesh Kumar and let us know how we can assist you!
               </p>
             </div>
             <div className="max-w-2xl mx-auto">
@@ -95,7 +95,7 @@ const Index = () => {
               Ready to Excel in Mathematics?
             </h2>
             <p className="text-white text-lg mb-8 max-w-2xl mx-auto">
-              Join Gurukul Maths Classes today and get access to free math resources tailored for grades 1-10.
+              Join Gurukul Maths Classes today and get access to free math resources tailored for grades 1-12.
             </p>
             <Button size="lg" variant="secondary" asChild>
               <Link to="/topics" className="flex items-center">
