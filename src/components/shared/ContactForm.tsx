@@ -137,13 +137,13 @@ const ContactForm = () => {
       <div className="mt-8 pt-6 border-t border-gray-200">
         <h4 className="text-lg font-medium mb-4 text-gray-800">Other ways to reach us:</h4>
         <div className="space-y-3">
-          <a href="tel:9523085735" className="flex items-center text-gray-700 hover:text-gurukul-purple">
+          <a href="tel:+919523085735" className="flex items-center text-gray-700 hover:text-gurukul-purple">
             <Phone className="h-5 w-5 mr-2" />
-            <span>9523085735</span>
+            <span>+91 95230 85735</span>
           </a>
-          <a href="https://wa.me/8709601984" className="flex items-center text-gray-700 hover:text-gurukul-purple">
+          <a href="https://wa.me/+919523085735" className="flex items-center text-gray-700 hover:text-gurukul-purple">
             <MessageCircle className="h-5 w-5 mr-2" />
-            <span>WhatsApp: 8709601984</span>
+            <span>WhatsApp: +91 95230 85735</span>
           </a>
           <a href="mailto:brajeshkumar87096@gmail.com" className="flex items-center text-gray-700 hover:text-gurukul-purple">
             <Mail className="h-5 w-5 mr-2" />

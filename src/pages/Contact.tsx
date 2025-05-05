@@ -39,9 +39,9 @@ const Contact = () => {
                       </div>
                       <div>
                         <p className="font-medium">WhatsApp</p>
-                        <p className="text-gray-700">8709601984</p>
+                        <p className="text-gray-700">+91 95230 85735</p>
                         <a 
-                          href="https://wa.me/8709601984" 
+                          href="https://wa.me/+919523085735" 
                           className="text-sm text-gurukul-purple hover:underline"
                         >
                           Send a message
@@ -55,9 +55,9 @@ const Contact = () => {
                       </div>
                       <div>
                         <p className="font-medium">Phone</p>
-                        <p className="text-gray-700">9523085735</p>
+                        <p className="text-gray-700">+91 95230 85735</p>
                         <a 
-                          href="tel:9523085735" 
+                          href="tel:+919523085735" 
                           className="text-sm text-gurukul-purple hover:underline"
                         >
                           Call us

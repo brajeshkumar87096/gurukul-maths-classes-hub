@@ -61,10 +61,10 @@ const Footer = () => {
                 <span className="font-medium">Instructor:</span> Brajesh Kumar
               </p>
               <p>
-                <span className="font-medium">WhatsApp:</span> 8709601984
+                <span className="font-medium">WhatsApp:</span> +91 95230 85735
               </p>
               <p>
-                <span className="font-medium">Phone:</span> 9523085735
+                <span className="font-medium">Phone:</span> +91 95230 85735
               </p>
               <p className="flex items-center">
                 <span className="font-medium mr-1">Email:</span>

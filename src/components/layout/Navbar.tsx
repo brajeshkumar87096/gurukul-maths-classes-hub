@@ -85,7 +85,7 @@ const Navbar = () => {
               </Button>
             )}
             <Button className="bg-gurukul-purple hover:bg-gurukul-purple/90">
-              <a href="https://wa.me/8709601984" className="flex items-center">
+              <a href="https://wa.me/+919523085735" className="flex items-center">
                 Connect on WhatsApp
               </a>
             </Button>
@@ -146,7 +146,7 @@ const Navbar = () => {
             )}
             <div className="px-3 py-3">
               <Button className="w-full bg-gurukul-purple hover:bg-gurukul-purple/90">
-                <a href="https://wa.me/8709601984" className="flex items-center justify-center w-full">
+                <a href="https://wa.me/+919523085735" className="flex items-center justify-center w-full">
                   Connect on WhatsApp
                 </a>
               </Button>
