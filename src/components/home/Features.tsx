@@ -1,5 +1,5 @@
 
-import { BookOpen, FileText, GraduationCap, Users } from "lucide-react";
+import { BookOpen, FileText, GraduationCap, Users, User } from "lucide-react";
 
 const Features = () => {
   const features = [
@@ -23,13 +23,18 @@ const Features = () => {
       title: "Experienced Teacher",
       description: "Learn from Brajesh Kumar with 5+ years of experience on Chegg and Course Hero.",
     },
+    {
+      icon: <User className="h-10 w-10 text-gurukul-purple" />,
+      title: "Personal Accounts",
+      description: "Create a free account to track your progress and access personalized resources.",
+    },
   ];
 
   return (
     <section className="py-16 bg-white">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-bold text-center mb-12">Why Choose Gurukul Maths Classes?</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           {features.map((feature, index) => (
             <div 
               key={index} 

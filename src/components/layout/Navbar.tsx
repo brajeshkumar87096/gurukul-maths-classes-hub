@@ -1,12 +1,29 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const location = useLocation();
+
+  useEffect(() => {
+    // Check if user is logged in
+    const checkLoginStatus = () => {
+      const user = localStorage.getItem("user");
+      setIsLoggedIn(!!user);
+    };
+
+    checkLoginStatus();
+    // Add event listener to check login status when localStorage changes
+    window.addEventListener("storage", checkLoginStatus);
+    
+    return () => {
+      window.removeEventListener("storage", checkLoginStatus);
+    };
+  }, []);
 
   const navItems = [
     { name: "Home", path: "/" },
@@ -51,7 +68,22 @@ const Navbar = () => {
             ))}
           </div>
 
-          <div className="hidden md:flex">
+          <div className="hidden md:flex items-center gap-4">
+            {isLoggedIn ? (
+              <Button asChild className="bg-gurukul-purple hover:bg-gurukul-purple/90">
+                <Link to="/profile" className="flex items-center gap-2">
+                  <User size={18} />
+                  Profile
+                </Link>
+              </Button>
+            ) : (
+              <Button asChild className="bg-gurukul-purple hover:bg-gurukul-purple/90">
+                <Link to="/login" className="flex items-center gap-2">
+                  <User size={18} />
+                  Login
+                </Link>
+              </Button>
+            )}
             <Button className="bg-gurukul-purple hover:bg-gurukul-purple/90">
               <a href="https://wa.me/8709601984" className="flex items-center">
                 Connect on WhatsApp
@@ -95,6 +127,23 @@ const Navbar = () => {
                 {item.name}
               </Link>
             ))}
+            {isLoggedIn ? (
+              <Link
+                to="/profile"
+                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50"
+                onClick={() => setIsOpen(false)}
+              >
+                Profile
+              </Link>
+            ) : (
+              <Link
+                to="/login"
+                className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-50"
+                onClick={() => setIsOpen(false)}
+              >
+                Login
+              </Link>
+            )}
             <div className="px-3 py-3">
               <Button className="w-full bg-gurukul-purple hover:bg-gurukul-purple/90">
                 <a href="https://wa.me/8709601984" className="flex items-center justify-center w-full">
