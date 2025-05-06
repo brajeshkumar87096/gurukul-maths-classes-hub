@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 const TopicGrid = () => {
   const topics = [
     {
+      id: "algebra",
       name: "Algebra",
       icon: "➗",
       description: "Linear equations, polynomials, factoring, and more",
@@ -12,6 +13,7 @@ const TopicGrid = () => {
       textColor: "text-blue-600",
     },
     {
+      id: "geometry",
       name: "Geometry",
       icon: "📐",
       description: "Shapes, angles, area, perimeter, and volume",
@@ -19,6 +21,7 @@ const TopicGrid = () => {
       textColor: "text-green-600",
     },
     {
+      id: "arithmetic",
       name: "Arithmetic",
       icon: "🔢",
       description: "Basic operations, fractions, decimals, and percentages",
@@ -26,6 +29,7 @@ const TopicGrid = () => {
       textColor: "text-amber-600",
     },
     {
+      id: "statistics",
       name: "Statistics",
       icon: "📊",
       description: "Data analysis, probability, and graphing",
@@ -33,6 +37,7 @@ const TopicGrid = () => {
       textColor: "text-purple-600",
     },
     {
+      id: "trigonometry",
       name: "Trigonometry",
       icon: "📏",
       description: "Sine, cosine, tangent, and triangles",
@@ -40,6 +45,7 @@ const TopicGrid = () => {
       textColor: "text-rose-600",
     },
     {
+      id: "calculus",
       name: "Calculus",
       icon: "∫",
       description: "Limits, derivatives, integrals, and applications",
@@ -61,8 +67,8 @@ const TopicGrid = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {topics.map((topic, index) => (
-            <Link to={`/topics/${topic.name.toLowerCase().replace(/\s+/g, '-')}`} key={index}>
+          {topics.map((topic) => (
+            <Link to={`/topics/${topic.id}`} key={topic.id}>
               <div className={`topic-card p-6 rounded-lg ${topic.color} border border-gray-100 h-full relative overflow-hidden`}>
                 <div className="text-4xl mb-4">{topic.icon}</div>
                 <h3 className={`text-xl font-semibold mb-2 ${topic.textColor}`}>{topic.name}</h3>

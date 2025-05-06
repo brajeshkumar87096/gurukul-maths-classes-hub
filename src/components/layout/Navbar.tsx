@@ -46,7 +46,7 @@ const Navbar = () => {
           <div className="flex items-center">
             <Link to="/" className="flex items-center">
               <img 
-                src="/lovable-uploads/c1411fe7-4dcc-4c10-8a39-7ea33f4884a8.png" 
+                src="/lovable-uploads/18d57b91-4ef9-42f4-8d60-b54e94b1b951.png" 
                 alt="Gurukul Maths Classes" 
                 className="h-10 w-auto mr-2" 
               />
@@ -85,7 +85,7 @@ const Navbar = () => {
               </Button>
             )}
             <Button className="bg-gurukul-purple hover:bg-gurukul-purple/90">
-              <a href="https://wa.me/+919523085735" className="flex items-center">
+              <a href="https://wa.me/9523085735" className="flex items-center">
                 Connect on WhatsApp
               </a>
             </Button>
@@ -146,7 +146,7 @@ const Navbar = () => {
             )}
             <div className="px-3 py-3">
               <Button className="w-full bg-gurukul-purple hover:bg-gurukul-purple/90">
-                <a href="https://wa.me/+919523085735" className="flex items-center justify-center w-full">
+                <a href="https://wa.me/9523085735" className="flex items-center justify-center w-full">
                   Connect on WhatsApp
                 </a>
               </Button>

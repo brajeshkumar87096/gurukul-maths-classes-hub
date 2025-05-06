@@ -12,7 +12,7 @@ const Footer = () => {
           <div>
             <div className="flex items-center mb-4">
               <img
-                src="/lovable-uploads/c1411fe7-4dcc-4c10-8a39-7ea33f4884a8.png"
+                src="/lovable-uploads/18d57b91-4ef9-42f4-8d60-b54e94b1b951.png"
                 alt="Gurukul Maths Classes"
                 className="h-10 w-auto mr-2"
               />
@@ -61,10 +61,10 @@ const Footer = () => {
                 <span className="font-medium">Instructor:</span> Brajesh Kumar
               </p>
               <p>
-                <span className="font-medium">WhatsApp:</span> +91 95230 85735
+                <span className="font-medium">WhatsApp:</span> 9523085735
               </p>
               <p>
-                <span className="font-medium">Phone:</span> +91 95230 85735
+                <span className="font-medium">Phone:</span> 8709601984
               </p>
               <p className="flex items-center">
                 <span className="font-medium mr-1">Email:</span>
