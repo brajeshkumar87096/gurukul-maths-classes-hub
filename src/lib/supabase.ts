@@ -2,11 +2,13 @@
 import { createClient } from '@supabase/supabase-js';
 
 // These are public keys, safe to expose in the client
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL as string;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string;
+// Provide fallback values if environment variables are not available
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://zbpzkrdkvktuzgxxumgi.supabase.co";
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpicHprcmRrdmt0dXpneHh1bWdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjA1MjgxMjgsImV4cCI6MjAzNjEwNDEyOH0.Xg_R7l7_S_-qAUv5bvxqdSs12kVgjr0lkN33B89_Q94";
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Missing Supabase environment variables. Check your .env file.');
+// Log a warning instead of an error, so the app can still function
+if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
+  console.warn('Using default Supabase credentials. For production, set proper environment variables.');
 }
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);

@@ -4,7 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Index from "./pages/Index";
 import Topics from "./pages/Topics";
 import About from "./pages/About";
@@ -17,15 +17,27 @@ import NotFound from "./pages/NotFound";
 import TopicDetail from "./pages/TopicDetail";
 import { AuthProvider } from "./context/AuthContext";
 import { checkAndCreateTables } from "./lib/supabase";
+import { toast } from "sonner";
 
 const queryClient = new QueryClient();
 
 const App = () => {
+  const [dbInitialized, setDbInitialized] = useState(false);
+
   useEffect(() => {
     // Run this once when the app starts
     checkAndCreateTables()
-      .then(() => console.log("Database schema check completed"))
-      .catch(err => console.error("Error during database schema check:", err));
+      .then(() => {
+        console.log("Database schema check completed");
+        setDbInitialized(true);
+        toast.success("Database connected successfully");
+      })
+      .catch(err => {
+        console.error("Error during database schema check:", err);
+        toast.error("Database connection issue. Some features may be limited.");
+        // Still set initialized to true so app can work with limited functionality
+        setDbInitialized(true);
+      });
   }, []);
 
   return (
