@@ -1,5 +1,5 @@
 
-import { supabase } from "@/lib/supabase";
+import { supabase, Resource, SavedResource } from "@/lib/supabase";
 import { v4 as uuidv4 } from "uuid";
 
 export const uploadResource = async (
@@ -92,5 +92,106 @@ export const deleteResource = async (resourceId: string): Promise<{ success: boo
   } catch (error: any) {
     console.error("Error deleting resource:", error);
     return { success: false, error: error.message || "Failed to delete resource" };
+  }
+};
+
+export const getSavedResourcesByUserId = async (userId: string): Promise<Resource[]> => {
+  try {
+    // First get the saved resource IDs for this user
+    const { data: savedData, error: savedError } = await supabase
+      .from('saved_resources')
+      .select('resource_id')
+      .eq('user_id', userId);
+
+    if (savedError) {
+      throw savedError;
+    }
+
+    if (!savedData || savedData.length === 0) {
+      return [];
+    }
+
+    // Extract the resource IDs
+    const resourceIds = savedData.map(item => item.resource_id);
+
+    // Then fetch the actual resource data
+    const { data: resourcesData, error: resourcesError } = await supabase
+      .from('resources')
+      .select('*')
+      .in('id', resourceIds);
+
+    if (resourcesError) {
+      throw resourcesError;
+    }
+
+    return resourcesData || [];
+  } catch (error) {
+    console.error("Error fetching saved resources:", error);
+    return [];
+  }
+};
+
+export const toggleSaveResource = async (userId: string, resourceId: string): Promise<{ success: boolean; saved: boolean; error?: string }> => {
+  try {
+    // Check if the resource is already saved
+    const { data: existingData, error: checkError } = await supabase
+      .from('saved_resources')
+      .select('id')
+      .eq('user_id', userId)
+      .eq('resource_id', resourceId)
+      .single();
+
+    if (checkError && checkError.code !== 'PGRST116') { // PGRST116 is "no rows returned" error
+      throw checkError;
+    }
+
+    if (existingData) {
+      // Resource is already saved, so unsave it
+      const { error: deleteError } = await supabase
+        .from('saved_resources')
+        .delete()
+        .eq('id', existingData.id);
+
+      if (deleteError) {
+        throw deleteError;
+      }
+
+      return { success: true, saved: false };
+    } else {
+      // Resource is not saved, so save it
+      const { error: insertError } = await supabase
+        .from('saved_resources')
+        .insert({ user_id: userId, resource_id: resourceId });
+
+      if (insertError) {
+        throw insertError;
+      }
+
+      return { success: true, saved: true };
+    }
+  } catch (error: any) {
+    console.error("Error toggling saved resource:", error);
+    return { success: false, saved: false, error: error.message };
+  }
+};
+
+export const isResourceSaved = async (userId: string, resourceId: string): Promise<boolean> => {
+  try {
+    const { data, error } = await supabase
+      .from('saved_resources')
+      .select('id')
+      .eq('user_id', userId)
+      .eq('resource_id', resourceId)
+      .single();
+
+    if (error && error.code !== 'PGRST116') {
+      console.error("Error checking if resource is saved:", error);
+      return false;
+    }
+
+    return !!data;
+  } catch (error) {
+    console.error("Error checking if resource is saved:", error);
+    return false;
   }
 };

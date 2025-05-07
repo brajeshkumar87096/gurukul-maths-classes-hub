@@ -4,9 +4,10 @@ import { useParams, Link } from "react-router-dom";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { Button } from "@/components/ui/button";
-import { Download, ArrowLeft, BookOpen, Clock, FileText, Loader2 } from "lucide-react";
+import { Download, ArrowLeft, BookOpen, Clock, FileText, Loader2, Bookmark } from "lucide-react";
 import { toast } from "sonner";
 import { fetchTopicById, fetchResourcesByTopicId, fetchRelatedTopics, downloadResource } from "@/services/topicService";
+import { toggleSaveResource, isResourceSaved } from "@/services/resourceService";
 import { Topic, Resource } from "@/lib/supabase";
 import { useAuth } from "@/context/AuthContext";
 
@@ -16,6 +17,7 @@ const TopicDetail = () => {
   const [resources, setResources] = useState<Resource[]>([]);
   const [relatedTopics, setRelatedTopics] = useState<Topic[]>([]);
   const [loading, setLoading] = useState(true);
+  const [savedResources, setSavedResources] = useState<Record<string, boolean>>({});
   const { user } = useAuth();
 
   useEffect(() => {
@@ -38,6 +40,15 @@ const TopicDetail = () => {
         // Fetch related topics
         const relatedTopicsData = await fetchRelatedTopics(topicId);
         setRelatedTopics(relatedTopicsData);
+
+        // If user is logged in, check which resources are saved
+        if (user) {
+          const savedStatus: Record<string, boolean> = {};
+          for (const resource of resourcesData) {
+            savedStatus[resource.id] = await isResourceSaved(user.id, resource.id);
+          }
+          setSavedResources(savedStatus);
+        }
       } catch (error) {
         console.error("Error loading topic data:", error);
         toast.error("Failed to load topic data");
@@ -47,7 +58,7 @@ const TopicDetail = () => {
     };
 
     loadTopicData();
-  }, [topicId]);
+  }, [topicId, user]);
 
   const handleDownload = async (filePath: string, fileName: string) => {
     try {
@@ -66,6 +77,31 @@ const TopicDetail = () => {
     } catch (error) {
       console.error("Error downloading resource:", error);
       toast.error("Failed to download resource");
+    }
+  };
+
+  const handleToggleSave = async (resourceId: string) => {
+    if (!user) {
+      toast.error("Please login to save resources");
+      return;
+    }
+
+    try {
+      const result = await toggleSaveResource(user.id, resourceId);
+      
+      if (result.success) {
+        setSavedResources(prev => ({
+          ...prev,
+          [resourceId]: result.saved
+        }));
+        
+        toast.success(result.saved ? "Resource saved successfully" : "Resource removed from saved items");
+      } else {
+        toast.error(result.error || "Failed to save resource");
+      }
+    } catch (error) {
+      console.error("Error toggling save status:", error);
+      toast.error("An error occurred while saving the resource");
     }
   };
 
@@ -163,13 +199,25 @@ const TopicDetail = () => {
                       <div key={resource.id} className="border rounded-lg p-6 hover:shadow-md transition-shadow">
                         <div className="flex justify-between">
                           <h3 className="text-xl font-semibold mb-2">{resource.title}</h3>
-                          <Button 
-                            variant="outline" 
-                            className="text-gurukul-purple border-gurukul-purple"
-                            onClick={() => handleDownload(resource.file_path, resource.title)}
-                          >
-                            <Download className="mr-2 h-4 w-4" /> Download
-                          </Button>
+                          <div className="flex gap-2">
+                            {user && (
+                              <Button 
+                                variant="outline" 
+                                size="icon"
+                                className={savedResources[resource.id] ? "text-yellow-500 border-yellow-500" : "text-gray-400 border-gray-300"}
+                                onClick={() => handleToggleSave(resource.id)}
+                              >
+                                <Bookmark className="h-4 w-4" fill={savedResources[resource.id] ? "currentColor" : "none"} />
+                              </Button>
+                            )}
+                            <Button 
+                              variant="outline" 
+                              className="text-gurukul-purple border-gurukul-purple"
+                              onClick={() => handleDownload(resource.file_path, resource.title)}
+                            >
+                              <Download className="mr-2 h-4 w-4" /> Download
+                            </Button>
+                          </div>
                         </div>
                         <p className="text-gray-700 mb-4">
                           {resource.description}
