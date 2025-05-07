@@ -1,87 +1,151 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { FileText, Download, Search } from "lucide-react";
+import { FileText, Download, Search, Loader2 } from "lucide-react";
+import { fetchAllTopics, fetchResourcesByTopicId, downloadResource } from "@/services/topicService";
+import { Topic, Resource } from "@/lib/supabase";
+import { toast } from "sonner";
+
+interface GroupedTopics {
+  [key: string]: {
+    grade: string;
+    topics: Array<{
+      id: string;
+      name: string;
+      resources: Resource[];
+    }>;
+  }[];
+}
 
 const Topics = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const [allTopics, setAllTopics] = useState<Topic[]>([]);
+  const [groupedTopics, setGroupedTopics] = useState<GroupedTopics>({});
+  const [resourcesByTopic, setResourcesByTopic] = useState<Record<string, Resource[]>>({});
+  const [loading, setLoading] = useState(true);
   
-  // Mock data for topics and PDFs
-  const gradeTopics = {
-    "primary": [
-      {
-        grade: "Grade 1-2",
-        topics: [
-          { name: "Counting and Numbers", pdfs: ["Introduction to Numbers.pdf", "Counting Practice.pdf"] },
-          { name: "Addition", pdfs: ["Basic Addition.pdf", "Addition Word Problems.pdf"] },
-          { name: "Subtraction", pdfs: ["Basic Subtraction.pdf", "Subtraction Practice.pdf"] },
-          { name: "Shapes", pdfs: ["2D Shapes.pdf", "Shape Recognition.pdf"] },
-          { name: "Time", pdfs: ["Telling Time.pdf", "Clock Practice.pdf"] },
-        ]
-      },
-      {
-        grade: "Grade 3-4",
-        topics: [
-          { name: "Multiplication", pdfs: ["Times Tables.pdf", "Multiplication Practice.pdf"] },
-          { name: "Division", pdfs: ["Basic Division.pdf", "Division Word Problems.pdf"] },
-          { name: "Fractions", pdfs: ["Introduction to Fractions.pdf", "Fraction Comparison.pdf"] },
-          { name: "Measurement", pdfs: ["Units of Measurement.pdf", "Measurement Practice.pdf"] },
-          { name: "Patterns", pdfs: ["Number Patterns.pdf", "Pattern Recognition.pdf"] },
-        ]
-      },
-    ],
-    "middle": [
-      {
-        grade: "Grade 5-6",
-        topics: [
-          { name: "Decimals", pdfs: ["Decimal Operations.pdf", "Decimal Problems.pdf"] },
-          { name: "Percentages", pdfs: ["Introduction to Percentages.pdf", "Percentage Calculations.pdf"] },
-          { name: "Area and Perimeter", pdfs: ["Area of Shapes.pdf", "Perimeter Practice.pdf"] },
-          { name: "Angles", pdfs: ["Types of Angles.pdf", "Angle Measurement.pdf"] },
-          { name: "Data Handling", pdfs: ["Charts and Graphs.pdf", "Data Analysis.pdf"] },
-        ]
-      },
-      {
-        grade: "Grade 7-8",
-        topics: [
-          { name: "Pre-Algebra", pdfs: ["Variables and Expressions.pdf", "Solving Equations.pdf"] },
-          { name: "Geometry", pdfs: ["Triangles and Quadrilaterals.pdf", "Geometric Properties.pdf"] },
-          { name: "Ratio and Proportion", pdfs: ["Understanding Ratios.pdf", "Proportional Relationships.pdf"] },
-          { name: "Statistics", pdfs: ["Mean, Median, Mode.pdf", "Data Representation.pdf"] },
-          { name: "Integers", pdfs: ["Integer Operations.pdf", "Negative Numbers.pdf"] },
-        ]
-      },
-    ],
-    "high": [
-      {
-        grade: "Grade 9-10",
-        topics: [
-          { name: "Algebra", pdfs: ["Linear Equations.pdf", "Quadratic Functions.pdf", "Systems of Equations.pdf"] },
-          { name: "Geometry", pdfs: ["Coordinate Geometry.pdf", "Transformations.pdf", "Trigonometric Ratios.pdf"] },
-          { name: "Statistics and Probability", pdfs: ["Probability Concepts.pdf", "Statistical Analysis.pdf"] },
-          { name: "Functions", pdfs: ["Function Notation.pdf", "Graphing Functions.pdf"] },
-          { name: "Exponents and Logarithms", pdfs: ["Exponent Rules.pdf", "Logarithm Basics.pdf"] },
-        ]
-      },
-      {
-        grade: "Grade 11-12",
-        topics: [
-          { name: "Advanced Algebra", pdfs: ["Polynomial Functions.pdf", "Complex Numbers.pdf", "Sequences and Series.pdf"] },
-          { name: "Calculus", pdfs: ["Limits and Continuity.pdf", "Differentiation.pdf", "Integration.pdf"] },
-          { name: "Trigonometry", pdfs: ["Advanced Trigonometric Functions.pdf", "Trigonometric Identities.pdf"] },
-          { name: "Probability and Statistics", pdfs: ["Probability Distributions.pdf", "Hypothesis Testing.pdf"] },
-          { name: "Vectors and Matrices", pdfs: ["Vector Operations.pdf", "Matrix Algebra.pdf", "Linear Transformations.pdf"] },
-        ]
+  useEffect(() => {
+    const loadTopics = async () => {
+      setLoading(true);
+      try {
+        // Fetch all topics
+        const topicsData = await fetchAllTopics();
+        setAllTopics(topicsData);
+        
+        // Group topics by grade level
+        const grouped: GroupedTopics = {
+          primary: [
+            { grade: "Grade 1-2", topics: [] },
+            { grade: "Grade 3-4", topics: [] }
+          ],
+          middle: [
+            { grade: "Grade 5-6", topics: [] },
+            { grade: "Grade 7-8", topics: [] }
+          ],
+          high: [
+            { grade: "Grade 9-10", topics: [] },
+            { grade: "Grade 11-12", topics: [] }
+          ]
+        };
+        
+        // Simple mapping based on topic name to determine grade level
+        // In a real app, this would come from a field in the database
+        for (const topic of topicsData) {
+          const placeTopic = (gradeGroup: string, gradeIndex: number) => {
+            if (!grouped[gradeGroup][gradeIndex].topics.some(t => t.id === topic.id)) {
+              grouped[gradeGroup][gradeIndex].topics.push({
+                id: topic.id,
+                name: topic.name,
+                resources: []
+              });
+            }
+          };
+          
+          // Assign topics to grade levels based on a simple algorithm
+          // This is just a placeholder - in a real app, topics would have a grade field
+          const topicNameLower = topic.name.toLowerCase();
+          if (topicNameLower.includes('arithmetic')) {
+            placeTopic('primary', 0);
+          } else if (topicNameLower.includes('algebra')) {
+            if (topicNameLower.includes('advanced')) {
+              placeTopic('high', 1);
+            } else {
+              placeTopic('middle', 1);
+            }
+          } else if (topicNameLower.includes('calculus')) {
+            placeTopic('high', 1);
+          } else if (topicNameLower.includes('geometry')) {
+            placeTopic('middle', 0);
+          } else if (topicNameLower.includes('trigonometry')) {
+            placeTopic('high', 0);
+          } else if (topicNameLower.includes('statistics')) {
+            placeTopic('high', 0);
+          } else {
+            // Default placement
+            const random = Math.floor(Math.random() * 6);
+            const gradeGroup = random < 2 ? 'primary' : random < 4 ? 'middle' : 'high';
+            const gradeIndex = random % 2;
+            placeTopic(gradeGroup, gradeIndex);
+          }
+        }
+        
+        setGroupedTopics(grouped);
+        
+        // Load resources for each topic
+        const resourcesMap: Record<string, Resource[]> = {};
+        for (const topic of topicsData) {
+          try {
+            const topicResources = await fetchResourcesByTopicId(topic.id);
+            resourcesMap[topic.id] = topicResources;
+          } catch (error) {
+            console.error(`Error fetching resources for topic ${topic.id}:`, error);
+            resourcesMap[topic.id] = [];
+          }
+        }
+        setResourcesByTopic(resourcesMap);
+        
+      } catch (error) {
+        console.error("Error loading topics:", error);
+        toast.error("Failed to load topics");
+      } finally {
+        setLoading(false);
       }
-    ]
+    };
+
+    loadTopics();
+  }, []);
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleDownload = async (filePath: string, fileName: string) => {
+    try {
+      toast.info(`Preparing ${fileName} for download...`);
+      const downloadUrl = await downloadResource(filePath);
+      
+      // Create an anchor element and trigger download
+      const link = document.createElement('a');
+      link.href = downloadUrl;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      toast.success(`Downloading ${fileName}`);
+    } catch (error) {
+      console.error("Error downloading resource:", error);
+      toast.error("Failed to download resource");
+    }
   };
 
   // Filter topics based on search term
-  const filterTopics = (topics: any[]) => {
+  const filterTopics = (topics: Array<{ id: string; name: string; resources: Resource[] }>) => {
     if (!searchTerm) return topics;
     
     return topics.filter(topic => 
@@ -89,15 +153,20 @@ const Topics = () => {
     );
   };
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-  };
-
-  const handleDownload = (pdf: string) => {
-    // Mock function for PDF download
-    alert(`Downloading ${pdf}...`);
-    // In a real implementation, this would trigger a download
-  };
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <main className="flex-grow flex items-center justify-center">
+          <div className="text-center">
+            <Loader2 className="animate-spin h-12 w-12 text-gurukul-purple mx-auto" />
+            <p className="mt-4 text-gray-600">Loading topics...</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -132,40 +201,50 @@ const Topics = () => {
                 <TabsTrigger value="high">High (Grades 9-12)</TabsTrigger>
               </TabsList>
               
-              {Object.entries(gradeTopics).map(([key, gradeGroup]) => (
+              {Object.entries(groupedTopics).map(([key, gradeGroup]) => (
                 <TabsContent key={key} value={key} className="space-y-12">
                   {gradeGroup.map((grade, gradeIndex) => (
                     <div key={gradeIndex}>
                       <h2 className="text-2xl font-bold mb-6 pb-2 border-b">{grade.grade}</h2>
                       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        {filterTopics(grade.topics).map((topic, topicIndex) => (
+                        {filterTopics(grade.topics).map((topic) => (
                           <div 
-                            key={topicIndex} 
+                            key={topic.id} 
                             className="border rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow"
                           >
-                            <div className="bg-gray-50 p-4 border-b">
+                            <div className="bg-gray-50 p-4 border-b flex justify-between items-center">
                               <h3 className="text-xl font-semibold">{topic.name}</h3>
+                              <Link 
+                                to={`/topics/${topic.id}`}
+                                className="text-sm text-gurukul-purple hover:underline"
+                              >
+                                View Topic
+                              </Link>
                             </div>
                             <div className="p-4">
                               <h4 className="text-sm font-medium text-gray-500 mb-3 flex items-center">
-                                <FileText className="h-4 w-4 mr-1" /> Available PDFs
+                                <FileText className="h-4 w-4 mr-1" /> Available Resources
                               </h4>
-                              <ul className="space-y-2">
-                                {topic.pdfs.map((pdf, pdfIndex) => (
-                                  <li key={pdfIndex} className="flex justify-between items-center text-sm">
-                                    <span className="text-gray-700">{pdf}</span>
-                                    <Button 
-                                      size="sm" 
-                                      variant="outline"
-                                      className="flex items-center text-gurukul-purple border-gurukul-purple"
-                                      onClick={() => handleDownload(pdf)}
-                                    >
-                                      <Download className="h-3 w-3 mr-1" />
-                                      Download
-                                    </Button>
-                                  </li>
-                                ))}
-                              </ul>
+                              {resourcesByTopic[topic.id]?.length > 0 ? (
+                                <ul className="space-y-2">
+                                  {resourcesByTopic[topic.id]?.map((resource) => (
+                                    <li key={resource.id} className="flex justify-between items-center text-sm">
+                                      <span className="text-gray-700">{resource.title}</span>
+                                      <Button 
+                                        size="sm" 
+                                        variant="outline"
+                                        className="flex items-center text-gurukul-purple border-gurukul-purple"
+                                        onClick={() => handleDownload(resource.file_path, resource.title)}
+                                      >
+                                        <Download className="h-3 w-3 mr-1" />
+                                        Download
+                                      </Button>
+                                    </li>
+                                  ))}
+                                </ul>
+                              ) : (
+                                <p className="text-gray-500 text-sm">No resources available yet.</p>
+                              )}
                             </div>
                           </div>
                         ))}

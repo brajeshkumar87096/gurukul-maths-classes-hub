@@ -1,62 +1,57 @@
 
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { User, Mail, KeyRound, Phone } from "lucide-react";
+import { Mail, User, KeyRound } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
 
 const SignUpForm = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    grade: "",
-    password: "",
-    confirmPassword: "",
-  });
+  const { signUp } = useAuth();
+  const [fullName, setFullName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
-  };
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (formData.password !== formData.confirmPassword) {
-      toast.error("Passwords don't match!");
-      return;
-    }
-    
     setIsLoading(true);
+    setError(null);
     
-    // For demo purposes, we'll just simulate a signup
-    // In a real app, this would connect to an authentication service
-    setTimeout(() => {
+    try {
+      const { success, error } = await signUp(email, password, fullName);
+      
+      if (success) {
+        toast.success("Account created successfully!");
+        navigate("/profile");
+      } else {
+        setError(error || "An unknown error occurred");
+        toast.error(error || "Failed to create account");
+      }
+    } catch (err: any) {
+      setError(err.message || "An unknown error occurred");
+      toast.error(err.message || "Failed to create account");
+    } finally {
       setIsLoading(false);
-      // Store some basic user info in localStorage for the profile page
-      localStorage.setItem("user", JSON.stringify({ 
-        email: formData.email, 
-        name: formData.name,
-        grade: formData.grade,
-        phone: formData.phone,
-        joinDate: new Date().toISOString()
-      }));
-      toast.success("Account created successfully!");
-      navigate("/profile");
-    }, 1500);
+    }
   };
 
   return (
     <div className="w-full max-w-md mx-auto space-y-6">
       <div className="text-center">
         <h1 className="text-2xl font-bold">Create an account</h1>
-        <p className="text-gray-500 mt-2">Sign up to access math resources</p>
+        <p className="text-gray-500 mt-2">Enter your information to get started</p>
       </div>
+      
+      {error && (
+        <div className="bg-red-50 text-red-600 p-3 rounded-md text-sm">
+          {error}
+        </div>
+      )}
       
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
@@ -67,10 +62,10 @@ const SignUpForm = () => {
             </span>
             <Input 
               id="name" 
-              name="name"
-              placeholder="Enter your name" 
-              value={formData.name}
-              onChange={handleChange}
+              type="text" 
+              placeholder="John Doe" 
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
               className="pl-10"
               required
             />
@@ -85,52 +80,14 @@ const SignUpForm = () => {
             </span>
             <Input 
               id="email" 
-              name="email"
               type="email" 
               placeholder="you@example.com" 
-              value={formData.email}
-              onChange={handleChange}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="pl-10"
               required
             />
           </div>
-        </div>
-        
-        <div className="space-y-2">
-          <Label htmlFor="phone">Phone Number</Label>
-          <div className="relative">
-            <span className="absolute left-3 top-3 text-gray-400">
-              <Phone className="h-4 w-4" />
-            </span>
-            <Input 
-              id="phone" 
-              name="phone"
-              placeholder="Your phone number" 
-              value={formData.phone}
-              onChange={handleChange}
-              className="pl-10"
-              required
-            />
-          </div>
-        </div>
-        
-        <div className="space-y-2">
-          <Label htmlFor="grade">Grade</Label>
-          <select
-            id="grade"
-            name="grade"
-            value={formData.grade}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gurukul-purple/50"
-            required
-          >
-            <option value="">Select Grade</option>
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((grade) => (
-              <option key={grade} value={`Grade ${grade}`}>
-                Grade {grade}
-              </option>
-            ))}
-          </select>
         </div>
         
         <div className="space-y-2">
@@ -141,32 +98,17 @@ const SignUpForm = () => {
             </span>
             <Input 
               id="password" 
-              name="password"
-              type="password"
-              value={formData.password}
-              onChange={handleChange}
+              type="password" 
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="pl-10"
               required
+              minLength={6}
             />
           </div>
-        </div>
-        
-        <div className="space-y-2">
-          <Label htmlFor="confirmPassword">Confirm Password</Label>
-          <div className="relative">
-            <span className="absolute left-3 top-3 text-gray-400">
-              <KeyRound className="h-4 w-4" />
-            </span>
-            <Input 
-              id="confirmPassword" 
-              name="confirmPassword"
-              type="password"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              className="pl-10"
-              required
-            />
-          </div>
+          <p className="text-xs text-gray-500">
+            Password must be at least 6 characters long
+          </p>
         </div>
         
         <Button 
@@ -174,7 +116,7 @@ const SignUpForm = () => {
           className="w-full bg-gurukul-purple hover:bg-gurukul-purple/90"
           disabled={isLoading}
         >
-          {isLoading ? "Creating account..." : "Create Account"}
+          {isLoading ? "Creating account..." : "Create account"}
         </Button>
       </form>
       
