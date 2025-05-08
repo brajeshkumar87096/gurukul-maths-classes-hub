@@ -26,18 +26,20 @@ const App = () => {
 
   useEffect(() => {
     // Run this once when the app starts
-    checkAndCreateTables()
-      .then(() => {
-        console.log("Database schema check completed");
-        setDbInitialized(true);
-        toast.success("Database connected successfully");
-      })
-      .catch(err => {
-        console.error("Error during database schema check:", err);
-        toast.error("Database connection issue. Some features may be limited.");
-        // Still set initialized to true so app can work with limited functionality
-        setDbInitialized(true);
-      });
+    setTimeout(() => {
+      checkAndCreateTables()
+        .then(() => {
+          console.log("Database schema check completed");
+          setDbInitialized(true);
+          toast.success("Database connected successfully");
+        })
+        .catch(err => {
+          console.error("Error during database schema check:", err);
+          toast.error("Database connection issue. Some features may be limited.");
+          // Still set initialized to true so app can work with limited functionality
+          setDbInitialized(true);
+        });
+    }, 1000); // Small delay to ensure client is properly initialized
   }, []);
 
   return (

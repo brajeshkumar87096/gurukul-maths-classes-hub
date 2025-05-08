@@ -2,14 +2,12 @@
 import { createClient } from '@supabase/supabase-js';
 
 // These are public keys, safe to expose in the client
-// Provide fallback values if environment variables are not available
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "https://zbpzkrdkvktuzgxxumgi.supabase.co";
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpicHprcmRrdmt0dXpneHh1bWdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjA1MjgxMjgsImV4cCI6MjAzNjEwNDEyOH0.Xg_R7l7_S_-qAUv5bvxqdSs12kVgjr0lkN33B89_Q94";
+// Using the provided Supabase URL and a public anon key
+const supabaseUrl = 'https://zbpzkrdkvktuzgxxumgi.supabase.co';
+const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpicHprcmRrdmt0dXpneHh1bWdpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjA1MjgxMjgsImV4cCI6MjAzNjEwNDEyOH0.Xg_R7l7_S_-qAUv5bvxqdSs12kVgjr0lkN33B89_Q94';
 
-// Log a warning instead of an error, so the app can still function
-if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
-  console.warn('Using default Supabase credentials. For production, set proper environment variables.');
-}
+// Now we're using hardcoded values which are safe to be public
+console.log('Initializing Supabase client with:', { supabaseUrl });
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
