@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Mail } from "lucide-react";
 
@@ -12,7 +11,7 @@ const Footer = () => {
           <div>
             <div className="flex items-center mb-4">
               <img
-                src="/lovable-uploads/18d57b91-4ef9-42f4-8d60-b54e94b1b951.png"
+                src="/lovable-uploads/00981162-62e1-4aec-891a-ede6f7512fa9.png"
                 alt="Gurukul Maths Classes"
                 className="h-10 w-auto mr-2"
               />

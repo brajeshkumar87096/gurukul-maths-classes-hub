@@ -32,7 +32,7 @@ const Hero = () => {
               <div className="absolute -bottom-10 -right-10 w-72 h-72 bg-gurukul-purple/20 rounded-full blur-3xl"></div>
               <div className="relative z-10">
                 <img
-                  src="/lovable-uploads/c1411fe7-4dcc-4c10-8a39-7ea33f4884a8.png"
+                  src="/lovable-uploads/00981162-62e1-4aec-891a-ede6f7512fa9.png"
                   alt="Gurukul Maths Classes"
                   className="w-72 h-72 object-contain"
                 />
