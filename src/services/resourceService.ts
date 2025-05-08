@@ -1,5 +1,6 @@
 
 import { supabase } from '@/lib/supabase';
+import { Resource } from '@/lib/supabase';
 
 export const isResourceSaved = async (userId: string, resourceId: string): Promise<boolean> => {
   try {
@@ -83,6 +84,34 @@ export const getSavedResources = async (userId: string): Promise<string[]> => {
     return data.map(item => item.resource_id);
   } catch (error) {
     console.error('Error fetching saved resources:', error);
+    return [];
+  }
+};
+
+// Get complete resource details for saved resources
+export const getSavedResourcesWithDetails = async (userId: string): Promise<Resource[]> => {
+  try {
+    // First get the IDs of saved resources
+    const savedIds = await getSavedResources(userId);
+    
+    if (savedIds.length === 0) {
+      return [];
+    }
+    
+    // Then fetch complete resource details
+    const { data, error } = await supabase
+      .from('resources')
+      .select('*')
+      .in('id', savedIds);
+      
+    if (error) {
+      console.error('Error fetching resource details:', error);
+      return [];
+    }
+    
+    return data;
+  } catch (error) {
+    console.error('Error fetching saved resources with details:', error);
     return [];
   }
 };

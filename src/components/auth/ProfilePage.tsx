@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { User, Loader2, Download } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { supabase } from "@/lib/supabase";
-import { getSavedResourcesByUserId } from "@/services/resourceService";
+import { getSavedResources } from "@/services/resourceService";
 import { Resource } from "@/lib/supabase";
 import { downloadResource } from "@/services/topicService";
 
@@ -47,8 +47,23 @@ const ProfilePage = () => {
         
         // Load saved resources
         setLoadingSaved(true);
-        const resources = await getSavedResourcesByUserId(user.id);
-        setSavedResources(resources);
+        const savedResourceIds = await getSavedResources(user.id);
+        
+        // Fetch the actual resource details for each saved resource ID
+        if (savedResourceIds.length > 0) {
+          const { data: resourcesData, error: resourcesError } = await supabase
+            .from('resources')
+            .select('*')
+            .in('id', savedResourceIds);
+          
+          if (resourcesError) {
+            throw resourcesError;
+          }
+          
+          setSavedResources(resourcesData || []);
+        } else {
+          setSavedResources([]);
+        }
         setLoadingSaved(false);
       } catch (error) {
         console.error("Error fetching profile:", error);
