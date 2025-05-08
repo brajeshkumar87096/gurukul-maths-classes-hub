@@ -6,36 +6,22 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Mail } from "lucide-react";
-import { useAuth } from "@/context/AuthContext";
 
 const ForgotPasswordForm = () => {
-  const { resetPassword } = useAuth();
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError(null);
     
-    try {
-      const { success, error } = await resetPassword(email);
-      
-      if (success) {
-        setIsSubmitted(true);
-        toast.success("Password reset instructions sent!");
-      } else {
-        setError(error || "Failed to send reset instructions");
-        toast.error(error || "Failed to send reset instructions");
-      }
-    } catch (err: any) {
-      setError(err.message || "An error occurred");
-      toast.error(err.message || "Failed to send reset instructions");
-    } finally {
+    // Simulate API call
+    setTimeout(() => {
       setIsLoading(false);
-    }
+      setIsSubmitted(true);
+      toast.success("Password reset instructions sent!");
+    }, 1500);
   };
 
   if (isSubmitted) {
@@ -67,12 +53,6 @@ const ForgotPasswordForm = () => {
           No worries, we'll send you reset instructions.
         </p>
       </div>
-      
-      {error && (
-        <div className="bg-red-50 text-red-600 p-3 rounded-md text-sm">
-          {error}
-        </div>
-      )}
       
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-2">
