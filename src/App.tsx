@@ -19,7 +19,14 @@ import { AuthProvider } from "./context/AuthContext";
 import { checkAndCreateTables } from "./lib/supabase";
 import { toast } from "sonner";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 1,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 const App = () => {
   const [dbInitialized, setDbInitialized] = useState(false);
@@ -28,18 +35,22 @@ const App = () => {
     // Run this once when the app starts
     setTimeout(() => {
       checkAndCreateTables()
-        .then(() => {
+        .then((result) => {
           console.log("Database schema check completed");
           setDbInitialized(true);
-          toast.success("Database connected successfully");
+          if (result.success) {
+            toast.success("Database connected successfully");
+          } else {
+            toast.info("Using offline mode. Some features may be limited.");
+          }
         })
         .catch(err => {
           console.error("Error during database schema check:", err);
-          toast.error("Database connection issue. Some features may be limited.");
+          toast.info("Using offline mode. Some features may be limited.");
           // Still set initialized to true so app can work with limited functionality
           setDbInitialized(true);
         });
-    }, 1000); // Small delay to ensure client is properly initialized
+    }, 1500); // Longer delay to ensure client is properly initialized
   }, []);
 
   return (

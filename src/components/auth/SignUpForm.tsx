@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Mail, User, KeyRound } from "lucide-react";
+import { Mail, User, KeyRound, AlertCircle } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 
 const SignUpForm = () => {
@@ -23,17 +23,20 @@ const SignUpForm = () => {
     setError(null);
     
     try {
+      console.log("Submitting sign up form:", { email, fullName });
       const { success, error } = await signUp(email, password, fullName);
       
       if (success) {
         toast.success("Account created successfully!");
         navigate("/profile");
       } else {
-        setError(error || "An unknown error occurred");
+        console.error("Sign up error:", error);
+        setError(error || "Failed to create account. Please try again.");
         toast.error(error || "Failed to create account");
       }
     } catch (err: any) {
-      setError(err.message || "An unknown error occurred");
+      console.error("Sign up error:", err);
+      setError(err.message || "An unexpected error occurred");
       toast.error(err.message || "Failed to create account");
     } finally {
       setIsLoading(false);
@@ -48,8 +51,9 @@ const SignUpForm = () => {
       </div>
       
       {error && (
-        <div className="bg-red-50 text-red-600 p-3 rounded-md text-sm">
-          {error}
+        <div className="bg-red-50 text-red-600 p-4 rounded-md text-sm flex items-start">
+          <AlertCircle className="h-5 w-5 mr-2 flex-shrink-0 mt-0.5" />
+          <div>{error}</div>
         </div>
       )}
       

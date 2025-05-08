@@ -57,16 +57,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signUp = async (email: string, password: string, fullName: string) => {
     try {
+      console.log("Attempting to sign up user:", email);
+      
       const { data: { user, session }, error } = await supabase.auth.signUp({
         email,
         password,
+        options: {
+          data: {
+            full_name: fullName,
+          },
+        },
       });
 
       if (error) {
+        console.error("Error during sign up:", error);
         return { success: false, error: error.message };
       }
 
-      if (user) {
+      if (!user) {
+        console.error("No user returned after signup");
+        return { success: false, error: "Failed to create user account" };
+      }
+
+      console.log("User signed up successfully:", user.id);
+      
+      try {
         // Create a profile record
         const { error: profileError } = await supabase.from('profiles').insert({
           user_id: user.id,
@@ -76,16 +91,22 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
         if (profileError) {
           console.error('Error creating profile:', profileError);
+          // Continue anyway, as the user was created
         }
+      } catch (profileError) {
+        console.error('Error creating profile:', profileError);
+        // Continue anyway, as the user was created
       }
 
-      // Set session and user even if profile creation fails
+      // Set session and user
       setSession(session);
       setUser(user);
+      toast.success("Account created successfully!");
       
       return { success: true };
     } catch (error: any) {
-      return { success: false, error: error.message };
+      console.error("Unexpected error during sign up:", error);
+      return { success: false, error: error.message || "An unexpected error occurred" };
     }
   };
 
@@ -129,6 +150,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const signOut = async () => {
     try {
       await supabase.auth.signOut();
+      setUser(null);
+      setSession(null);
       navigate('/');
       toast.success('Signed out successfully');
     } catch (error) {
