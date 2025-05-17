@@ -1,0 +1,8 @@
+# Add all files
+git add .
+
+# Commit changes
+git commit -m "Add GitHub Actions for CI/CD and GitHub Pages"
+
+# Push to GitHub
+git push
